@@ -40,7 +40,7 @@ app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
     res.json({
         success:1,
-        image_url:`https://kvvbackend.onrender.com/${req.file.filename}`
+        image_url:`https://kvvbackend1.onrender.com/${req.file.filename}`
     })
 })
 
