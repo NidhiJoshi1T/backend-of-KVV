@@ -14,6 +14,8 @@ app.use(express.json());
 app.use(cors());
 
 
+const baseUrl = `http://${req.hostname}:${req.port}`;
+
 // database connection with MongoDB
 mongoose.connect("mongodb+srv://nidhijoshi:Mongoose_eagle@cluster0.0gpq5lt.mongodb.net/e-commerce");
 
@@ -40,7 +42,7 @@ app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
     res.json({
         success:1,
-        image_url:`https://kvvbackend1.onrender.com/${req.file.filename}`
+        image_url:`${baseUrl}/images/${req.file.filename}`
     })
 })
 
