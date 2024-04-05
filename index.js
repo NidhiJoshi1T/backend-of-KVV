@@ -17,7 +17,7 @@ app.use(cors());
 // database connection with MongoDB
 mongoose.connect("mongodb+srv://nidhijoshi:Mongoose_eagle@cluster0.0gpq5lt.mongodb.net/e-commerce");
 
-
+const host = req.get('host');
 //API creation
 app.get("/", (req, res)=>{
     res.send("Express App is running1")
@@ -40,7 +40,8 @@ app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
     res.json({
         success:1,
-        image_url:`http://localhost:${port}/images/${req.file.filename}`
+        
+        image_url:`http://${host}/images/${req.file.filename}`
     })
 })
 
