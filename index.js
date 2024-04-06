@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 
+
 // database connection with MongoDB
 mongoose.connect("mongodb+srv://nidhijoshi:Mongoose_eagle@cluster0.0gpq5lt.mongodb.net/e-commerce");
 
@@ -38,9 +39,12 @@ const upload = multer({storage:storage})
 app.use('/images',express.static('upload/images'))
 app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
+    
+    const host = req.get('host');
+
     res.json({
         success:1,
-        image_url:`http://localhost:${port}/images/${req.file.filename}`
+        image_url:`https://${host}/images/${req.file.filename}`
     })
 })
 
