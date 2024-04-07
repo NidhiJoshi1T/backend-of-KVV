@@ -1,3 +1,4 @@
+
 // port on which express.js will be running
 const port = 4000;
 //initialise the packages
@@ -16,8 +17,7 @@ app.use(cors());
 
 
 
-const __filename1 = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename1);
+const __dirname1 = path.resolve();
 
 
 // database connection with MongoDB
@@ -29,28 +29,28 @@ app.get("/", (req, res)=>{
     res.send("Express App is running1")
 })
 
-// Image storage engine
-const storage = multer.diskStorage({
-    destination: './upload/images',
-    filename: (req, file, cb)=>{
-        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-    }
-})
-const upload = multer({storage:storage})
+// // Image storage engine
+// const storage = multer.diskStorage({
+//     destination: './upload/images',
+//     filename: (req, file, cb)=>{
+//         return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+//     }
+// })
+// const upload = multer({storage:storage})
 
 
-//creating upload endpoint for images
+// //creating upload endpoint for images
 // app.use('/images',express.static('./upload/images'))
 
-app.use(express.static(path.join(__dirname, './upload/images')))
-app.post("/upload", upload.single('product'), (req, res)=>{
+app.use(express.static(path.join(__dirname1, './upload/images')))
+app.post("/upload",  (req, res)=>{
     //response given to user will be in json format
     
     const host = req.get('host');
 
     res.json({
         success:1,
-        image_url:`https://${host}/upload/images/${req.file.filename}`
+        image_url:`https://${host}/upload/images/${req.file.__filename}`
     })
 })
 
