@@ -16,6 +16,10 @@ app.use(cors());
 
 
 
+const __filename1 = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename1);
+
+
 // database connection with MongoDB
 mongoose.connect("mongodb+srv://nidhijoshi:Mongoose_eagle@cluster0.0gpq5lt.mongodb.net/e-commerce");
 
@@ -24,10 +28,6 @@ mongoose.connect("mongodb+srv://nidhijoshi:Mongoose_eagle@cluster0.0gpq5lt.mongo
 app.get("/", (req, res)=>{
     res.send("Express App is running1")
 })
-
-// const __filename1 = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename1);
-
 
 // Image storage engine
 const storage = multer.diskStorage({
@@ -40,9 +40,9 @@ const upload = multer({storage:storage})
 
 
 //creating upload endpoint for images
-app.use('/images',express.static('./upload/images'))
+// app.use('/images',express.static('./upload/images'))
 
-// app.use(express.static(path.join(__dirname, './upload/images')))
+app.use(express.static(path.join(__dirname, './upload/images')))
 app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
     
@@ -50,7 +50,7 @@ app.post("/upload", upload.single('product'), (req, res)=>{
 
     res.json({
         success:1,
-        image_url:`https://${host}/images/${req.file.filename}`
+        image_url:`https://${host}/upload/images/${req.file.filename}`
     })
 })
 
