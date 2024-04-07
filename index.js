@@ -9,6 +9,7 @@ const multer = require("multer");
 //include the path from express servers
 const path = require("path");
 const cors = require("cors");
+const { fileURLToPath } = require("url");
 
 app.use(express.json());
 app.use(cors());
@@ -24,19 +25,24 @@ app.get("/", (req, res)=>{
     res.send("Express App is running1")
 })
 
-
-// Image storage engine
-const storage = multer.diskStorage({
-    destination: './upload/images',
-    filename: (req, file, cb)=>{
-        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-    }
-})
-const upload = multer({storage:storage})
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
-//creating upload endpoint for images
-app.use('/images',express.static('upload/images'))
+// // Image storage engine
+// const storage = multer.diskStorage({
+//     destination: './upload/images',
+//     filename: (req, file, cb)=>{
+//         return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+//     }
+// })
+// const upload = multer({storage:storage})
+
+
+// //creating upload endpoint for images
+// app.use('/images',express.static('upload/images'))
+
+app.use(express.static(path.join(__dirname, './upload/images')))
 app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
     
