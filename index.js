@@ -17,9 +17,6 @@ app.use(cors());
 
 
 
-const __dirname1 = path.resolve();
-
-
 // database connection with MongoDB
 mongoose.connect("mongodb+srv://nidhijoshi:Mongoose_eagle@cluster0.0gpq5lt.mongodb.net/e-commerce");
 
@@ -29,28 +26,29 @@ app.get("/", (req, res)=>{
     res.send("Express App is running1")
 })
 
-// // Image storage engine
-// const storage = multer.diskStorage({
-//     destination: './upload/images',
-//     filename: (req, file, cb)=>{
-//         return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-//     }
-// })
-// const upload = multer({storage:storage})
+// Image storage engine
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'uploads/image/') // Directory where uploaded images will be stored
+    },
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname) // File name in the destination folder
+    }
+});
+const upload = multer({storage:storage});
 
 
-// //creating upload endpoint for images
-// app.use('/images',express.static('./upload/images'))
+//creating upload endpoint for images
+app.use('/images',express.static('uploads/image'))
 
-app.use(express.static(path.join(__dirname1, './upload/images')))
-app.post("/upload",  (req, res)=>{
+app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
     
     const host = req.get('host');
 
     res.json({
         success:1,
-        image_url:`https://${host}/upload/images/${req.file.__filename}`
+        image_url:`https://${host}/images/${req.file.filename}`
     })
 })
 
