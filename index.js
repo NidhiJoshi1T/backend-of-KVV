@@ -41,7 +41,7 @@ const upload = multer({storage:storage})
 app.use('/images',express.static('uploads/image'))
 app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
-
+    const host = req.get('host');
     cloudinary.uploader.upload(req.file.path, function(err, result){
         if(err){
             console.log(err);
@@ -51,17 +51,16 @@ app.post("/upload", upload.single('product'), (req, res)=>{
             })
         }
         res.status(200).json({
-            success: true,
-            message: "Uploaded",
-            data: result
+            success: 1,
+            image_url:`https://${host}/images/${req.file.filename}`
         })
     })
     
-    // const host = req.get('host');
+    // 
 
     // res.json({
     //     success:1,
-    //     image_url:`https://${host}/images/${req.file.filename}`
+    //     
     // })
 });
 
