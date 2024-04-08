@@ -9,15 +9,6 @@ const multer = require("multer");
 //include the path from express servers
 const path = require("path");
 const cors = require("cors");
-const cloudinary = require('cloudinary').v2;
-
-cloudinary.config({
-    cloud_name: 'dkcj0npso', 
-    api_key: '988552154351617', 
-    api_secret: 'l8O0_ZSFt73LpsKOapBNp7qOnl4' 
-});
-
-const router = express.Router();
 
 app.use(express.json());
 app.use(cors());
@@ -36,7 +27,7 @@ app.get("/", (req, res)=>{
 
 // Image storage engine
 const storage = multer.diskStorage({
-    
+    destination: 'uploads/image',
     filename: (req, file, cb)=>{
         return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
     }
@@ -48,34 +39,19 @@ const upload = multer({storage:storage})
 app.use('/images',express.static('uploads/image'))
 app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
-    const host = req.get('host');
-    res.status(200).json({
-            success: 1,
-            image_url:`https://${host}/images/${req.file.filename}`
-        })
-    cloudinary.uploader.upload(req.file.path, function(err, result){
-        if(err){
-            console.log(err);
-            return res.status(500).json({
-                success: false,
-                message: "Error"
-            })
-        }
-        
-    })
     
-    // 
+    const host = req.get('host');
 
-    // res.json({
-    //     success:1,
-    //     
-    // })
-});
+    res.json({
+        success:1,
+        image_url:`https://${host}/images/${req.file.filename}`
+    })
+})
 
 
 //to upload object in mongoDB atlas
 //Schema for creating products
-const Product = cloudinary.model("Product",{
+const Product = mongoose.model("Product",{
     id:{
         type: Number,
         required:true, //if we try to upload any product without id of type number it won't be uploaded
@@ -162,7 +138,7 @@ app.get('/allproducts', async(req, res) => {
 
 
 //Schema creating for user model
-const Users = cloudinary.model('Users', {
+const Users = mongoose.model('Users', {
     name:{
         type:String,
     },
