@@ -39,7 +39,7 @@ const upload = multer({storage:storage})
 
 //creating upload endpoint for images
 app.use('/images',express.static('uploads/image'))
-require.post("/upload", upload.single('product'), (req, res)=>{
+app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
 
     cloudinary.uploader.upload(req.file.path, function(err, result){
