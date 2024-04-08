@@ -9,6 +9,8 @@ const multer = require("multer");
 //include the path from express servers
 const path = require("path");
 const cors = require("cors");
+const cloudinary = require("./utils/cloudinary")
+const router = express.Router();
 
 app.use(express.json());
 app.use(cors());
@@ -27,7 +29,7 @@ app.get("/", (req, res)=>{
 
 // Image storage engine
 const storage = multer.diskStorage({
-    destination: 'uploads/image',
+    
     filename: (req, file, cb)=>{
         return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
     }
@@ -37,16 +39,31 @@ const upload = multer({storage:storage})
 
 //creating upload endpoint for images
 app.use('/images',express.static('uploads/image'))
-app.post("/upload", upload.single('product'), (req, res)=>{
+require.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
-    
-    const host = req.get('host');
 
-    res.json({
-        success:1,
-        image_url:`https://${host}/images/${req.file.filename}`
+    cloudinary.uploader.upload(req.file.path, function(err, result){
+        if(err){
+            console.log(err);
+            return res.status(500).json({
+                success: false,
+                message: "Error"
+            })
+        }
+        res.status(200).json({
+            success: true,
+            message: "Uploaded",
+            data: result
+        })
     })
-})
+    
+    // const host = req.get('host');
+
+    // res.json({
+    //     success:1,
+    //     image_url:`https://${host}/images/${req.file.filename}`
+    // })
+});
 
 
 //to upload object in mongoDB atlas
