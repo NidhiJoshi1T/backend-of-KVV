@@ -1,4 +1,3 @@
-
 // port on which express.js will be running
 const port = 4000;
 //initialise the packages
@@ -10,7 +9,6 @@ const multer = require("multer");
 //include the path from express servers
 const path = require("path");
 const cors = require("cors");
-const { fileURLToPath } = require("url");
 
 app.use(express.json());
 app.use(cors());
@@ -26,21 +24,19 @@ app.get("/", (req, res)=>{
     res.send("Express App is running1")
 })
 
+
 // Image storage engine
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'uploads/image/') // Directory where uploaded images will be stored
-    },
-    filename: function(req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname) // File name in the destination folder
+    destination: 'uploads/image',
+    filename: (req, file, cb)=>{
+        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
     }
-});
-const upload = multer({storage:storage});
+})
+const upload = multer({storage:storage})
 
 
 //creating upload endpoint for images
 app.use('/images',express.static('uploads/image'))
-
 app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
     
