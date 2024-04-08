@@ -68,7 +68,7 @@ app.post("/upload", upload.single('product'), (req, res)=>{
 
 //to upload object in mongoDB atlas
 //Schema for creating products
-const Product = mongoose.model("Product",{
+const Product = cloudinary.model("Product",{
     id:{
         type: Number,
         required:true, //if we try to upload any product without id of type number it won't be uploaded
@@ -155,7 +155,7 @@ app.get('/allproducts', async(req, res) => {
 
 
 //Schema creating for user model
-const Users = mongoose.model('Users', {
+const Users = cloudinary.model('Users', {
     name:{
         type:String,
     },
