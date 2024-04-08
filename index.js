@@ -9,7 +9,14 @@ const multer = require("multer");
 //include the path from express servers
 const path = require("path");
 const cors = require("cors");
-const cloudinary = require("./utils/cloudinary")
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: 'dkcj0npso', 
+    api_key: '988552154351617', 
+    api_secret: 'l8O0_ZSFt73LpsKOapBNp7qOnl4' 
+});
+
 const router = express.Router();
 
 app.use(express.json());
