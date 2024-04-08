@@ -42,6 +42,10 @@ app.use('/images',express.static('uploads/image'))
 app.post("/upload", upload.single('product'), (req, res)=>{
     //response given to user will be in json format
     const host = req.get('host');
+    res.status(200).json({
+            success: 1,
+            image_url:`https://${host}/images/${req.file.filename}`
+        })
     cloudinary.uploader.upload(req.file.path, function(err, result){
         if(err){
             console.log(err);
@@ -50,10 +54,7 @@ app.post("/upload", upload.single('product'), (req, res)=>{
                 message: "Error"
             })
         }
-        res.status(200).json({
-            success: 1,
-            image_url:`https://${host}/images/${req.file.filename}`
-        })
+        
     })
     
     // 
