@@ -1,5 +1,5 @@
 // port on which express.js will be running
-const port = 4000;
+const port = process.env.port || 4000;
 //initialise the packages
 const express = require("express");
 const app = express();
